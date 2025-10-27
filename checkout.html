@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Checkout | Mueblería ROXI</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .checkout { max-width: 1000px; margin: 4rem auto; padding: 0 1rem; }
+    .checkout h1 { text-align: center; margin-bottom: 2rem; }
+    .checkout-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 2rem; }
+    .card { background:#fff; border-radius:12px; box-shadow: var(--shadow); padding:1.5rem; }
+
+    /* Lista de ítems */
+    .cart-items{display:grid; gap:1rem;}
+    .cart-row{display:grid; grid-template-columns:auto 1fr auto auto auto; gap:1rem; align-items:center; border:1px solid var(--border); border-radius:12px; padding:.75rem;}
+    .cart-thumb{width:72px; height:72px; border-radius:10px; object-fit:cover}
+    .cart-name{font-weight:700; margin:0;}
+    .cart-style{color:var(--text-gray); font-size:.9rem; margin:.15rem 0 0 0;}
+    .qty{display:flex; align-items:center; gap:.4rem;}
+    .qty button{width:28px; height:28px; border-radius:8px; border:1px solid var(--border); background:#fff; cursor:pointer; font-weight:800;}
+    .qty span{min-width:24px; text-align:center; display:inline-block;}
+    .cart-price{font-weight:800;}
+    .cart-remove{border:0; background:transparent; cursor:pointer; color:#b42318; font-weight:800;}
+
+    .summary-row { display:flex; justify-content:space-between; margin:.5rem 0; }
+    .summary-total { font-weight:800; font-size:1.2rem; }
+    .btn-primary { width:100%; background:var(--primary); color:#fff; border:0; border-radius:10px; padding:1rem; font-weight:800; cursor:pointer; }
+    .btn-primary:hover { background:var(--primary-dark); }
+    .empty{color:var(--text-gray); text-align:center; padding:1rem 0;}
+
+    @media (max-width: 900px) {
+      .checkout-grid { grid-template-columns: 1fr; }
+      .cart-row{grid-template-columns:auto 1fr auto auto; }
+      .cart-price{display:none;} /* mostrar solo en total a pantallas pequeñas */
+    }
+  </style>
+</head>
+<body>
+  <header id="header" class="header">
+    <nav class="navbar container">
+      <div class="logo" onclick="location.href='index.html'">ROXI</div>
+      <a class="icon-btn icon-link" href="index.html">
+  <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none"
+       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 18l-6-6 6-6"></path>
+  </svg>
+  Seguir comprando
+</a>
+    </nav>
+  </header>
+
+  <main class="checkout">
+    <h1>Finalizar compra</h1>
+    <div class="checkout-grid">
+      <section class="card">
+        <h2>Tu Carrito</h2>
+        <div id="cartItems" class="cart-items"></div>
+        <p id="emptyMsg" class="empty" style="display:none;">Tu carrito está vacío.</p>
+
+        <h2 style="margin-top:2rem;">Métodos de Pago</h2>
+        <div class="pay-methods" style="display:grid; gap:1rem;">
+          <label class="pay-method" style="border:2px solid var(--border); border-radius:10px; padding:1rem; cursor:pointer; display:flex; gap:.6rem; align-items:center;"><input type="radio" name="pay" checked> Tarjeta de crédito / débito (Visa, Mastercard)</label>
+          <label class="pay-method" style="border:2px solid var(--border); border-radius:10px; padding:1rem; cursor:pointer; display:flex; gap:.6rem; align-items:center;"><input type="radio" name="pay"> Transferencia bancaria</label>
+          <label class="pay-method" style="border:2px solid var(--border); border-radius:10px; padding:1rem; cursor:pointer; display:flex; gap:.6rem; align-items:center;"><input type="radio" name="pay"> Pago móvil / QR</label>
+          <label class="pay-method" style="border:2px solid var(--border); border-radius:10px; padding:1rem; cursor:pointer; display:flex; gap:.6rem; align-items:center;"><input type="radio" name="pay"> Contraentrega (efectivo)</label>
+        </div>
+        <p style="color:var(--text-gray);margin-top:1rem">* Demo: aquí irían los formularios o QR reales.</p>
+      </section>
+
+      <aside class="card">
+        <h2>Resumen</h2>
+        <div class="summary-row"><span>Subtotal</span><span id="sumSubtotal">Bs —</span></div>
+        <div class="summary-row"><span>Envío</span><span id="sumShipping">Bs 0</span></div>
+        <div class="summary-row summary-total"><span>Total</span><span id="sumTotal">Bs —</span></div>
+        <button class="btn-primary" id="payBtn">Pagar ahora</button>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    // ==== mismas utilidades de moneda / storage que en animation.js ====
+    const CURRENCY_SYMBOL = 'Bs';
+    const currency = (n) => `${CURRENCY_SYMBOL} ${(Math.round(n * 100) / 100).toLocaleString('es-BO')}`;
+    const CART_KEY = 'roxi_cart_v1';
+    const loadCart = () => { try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch { return []; } };
+    const saveCart = (items) => localStorage.setItem(CART_KEY, JSON.stringify(items));
+
+    // ==== render del carrito ====
+    const cartItemsEl = document.getElementById('cartItems');
+    const emptyMsg = document.getElementById('emptyMsg');
+    const sumSubtotal = document.getElementById('sumSubtotal');
+    const sumShipping = document.getElementById('sumShipping'); // fijo 0 para demo
+    const sumTotal = document.getElementById('sumTotal');
+
+    function render() {
+      const items = loadCart();
+      cartItemsEl.innerHTML = '';
+      if (!items.length) {
+        emptyMsg.style.display = '';
+        sumSubtotal.textContent = 'Bs —';
+        sumTotal.textContent = 'Bs —';
+        return;
+      }
+      emptyMsg.style.display = 'none';
+
+      let subtotal = 0;
+      items.forEach((it, idx) => {
+        subtotal += (it.price || 0) * (it.qty || 1);
+
+        const row = document.createElement('div');
+        row.className = 'cart-row';
+
+        const img = document.createElement('img');
+        img.className = 'cart-thumb';
+        img.src = it.src || '';
+        img.alt = it.name || 'Producto';
+
+        const info = document.createElement('div');
+        info.innerHTML = `<p class="cart-name">${it.name}</p><p class="cart-style">${it.style || ''}</p>`;
+
+        const price = document.createElement('div');
+        price.className = 'cart-price';
+        price.textContent = currency(it.price || 0);
+
+        const qty = document.createElement('div');
+        qty.className = 'qty';
+        qty.innerHTML = `
+          <button aria-label="Restar">−</button>
+          <span>${it.qty || 1}</span>
+          <button aria-label="Sumar">+</button>
+        `;
+
+        const remove = document.createElement('button');
+        remove.className = 'cart-remove';
+        remove.textContent = 'Eliminar';
+
+        // handlers
+        qty.children[0].addEventListener('click', () => changeQty(idx, -1));
+        qty.children[2].addEventListener('click', () => changeQty(idx, +1));
+        remove.addEventListener('click', () => removeItem(idx));
+
+        row.append(img, info, price, qty, remove);
+        cartItemsEl.appendChild(row);
+      });
+
+      sumSubtotal.textContent = currency(subtotal);
+      const shipping = 0; // ajusta si quieres
+      sumShipping.textContent = currency(shipping);
+      sumTotal.textContent = currency(subtotal + shipping);
+    }
+
+    function changeQty(index, delta) {
+      const items = loadCart();
+      if (!items[index]) return;
+      items[index].qty = Math.max(1, (items[index].qty || 1) + delta);
+      saveCart(items);
+      render();
+    }
+
+    function removeItem(index) {
+      const items = loadCart();
+      items.splice(index, 1);
+      saveCart(items);
+      render();
+    }
+
+    // botón de pago (demo)
+    document.getElementById('payBtn').addEventListener('click', () => {
+      const items = loadCart();
+      if (!items.length) { alert('Tu carrito está vacío'); return; }
+      alert('Demo: pago procesado ✅');
+      // Si quisieras vaciar el carrito tras pagar, descomenta:
+      // localStorage.removeItem(CART_KEY);
+      // render();
+      // window.location.href = 'index.html';
+    });
+
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mueblería ROXI</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <!-- Header -->
+  <header id="header" class="header">
+    <nav class="navbar container">
+      <div class="logo" onclick="location.href='index.html'">ROXI</div>
+
+      <button class="icon-btn menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-expanded="false">
+        <span>☰</span>
+      </button>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#categorias">Estilos</a></li>
+        <li><a href="#productos">Productos</a></li>
+        <li><a href="#galeria">Galería</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="icon-btn" id="searchBtn" aria-label="Buscar">🔎</button>
+        <button class="icon-btn cart" id="cartBtn" aria-label="Carrito">
+          🛒 <span class="cart-count" id="cartCount">0</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Notificaciones -->
+  <div id="notification" class="notification" role="status" aria-live="polite"></div>
+
+  <main id="inicio">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-slide active" style="background-image:url('images/minimalista.jpg')">
+        <div class="hero-content">
+          <h1>Diseño Minimalista</h1>
+          <p>Espacios limpios que inspiran</p>
+          <button class="cta-btn" onclick="document.getElementById('productos').scrollIntoView({behavior:'smooth'})">Explorar</button>
+        </div>
+      </div>
+
+      <div class="hero-slide" style="background-image:url('images/rustico.jpg')">
+        <div class="hero-content">
+          <h1>Calidez Rústica</h1>
+          <p>Autenticidad en cada detalle</p>
+          <button class="cta-btn" onclick="document.getElementById('productos').scrollIntoView({behavior:'smooth'})">Ver</button>
+        </div>
+      </div>
+
+      <div class="hero-slide" style="background-image:url('images/industrial.jpg')">
+        <div class="hero-content">
+          <h1>Estilo Industrial</h1>
+          <p>Carácter urbano y moderno</p>
+          <button class="cta-btn" onclick="document.getElementById('productos').scrollIntoView({behavior:'smooth'})">Descubrir</button>
+        </div>
+      </div>
+
+      <div class="carousel-dots">
+        <button class="carousel-dot active" aria-label="Slide 1"></button>
+        <button class="carousel-dot" aria-label="Slide 2"></button>
+        <button class="carousel-dot" aria-label="Slide 3"></button>
+      </div>
+    </section>
+
+    <!-- Categorías -->
+    <section id="categorias" class="section container">
+      <h2 class="section-title">Explora por Estilo</h2>
+      <div class="categories-grid">
+        <article class="category-card" data-target="minimalista">
+          <img src="images/minimalista.jpg" alt="Estilo minimalista"/>
+          <div class="category-overlay">
+            <h3>Minimalista</h3>
+            <p>Líneas limpias y funcionalidad</p>
+          </div>
+        </article>
+        <article class="category-card" data-target="rústico">
+          <img src="images/rustico.jpg" alt="Estilo rústico"/>
+          <div class="category-overlay">
+            <h3>Rústico</h3>
+            <p>Materiales naturales con alma</p>
+          </div>
+        </article>
+        <article class="category-card" data-target="industrial">
+          <img src="images/industrial.jpg" alt="Estilo industrial"/>
+          <div class="category-overlay">
+            <h3>Industrial</h3>
+            <p>Metal y madera en armonía</p>
+          </div>
+        </article>
+        <article class="category-card" data-target="nórdico">
+          <img src="images/m4.jpg" alt="Estilo nórdico"/>
+          <div class="category-overlay">
+            <h3>Nórdico</h3>
+            <p>Luminoso y confortable</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Productos -->
+    <section id="productos" class="section section-alt">
+      <div class="container">
+        <h2 class="section-title">Productos Destacados</h2>
+
+        <!-- Filtros -->
+        <div id="filterBar" class="filter-bar">
+          <button class="active" data-filter="all">Todos</button>
+          <button data-filter="minimalista">Minimalista</button>
+          <button data-filter="rústico">Rústico</button>
+          <button data-filter="industrial">Industrial</button>
+          <button data-filter="nórdico">Nórdico</button>
+        </div>
+
+        <div class="products-grid">
+          <article class="product-card" data-style="minimalista">
+            <img class="product-image" src="images/m1.jpg" alt="Sofá Minimalista"/>
+            <div class="product-info">
+              <span class="product-category">Minimalista</span>
+              <h3 class="product-name">Sofá Oslo Premium</h3>
+              <p class="product-price">Bs 1,299</p>
+              <button class="add-to-cart">Añadir al Carrito</button>
+            </div>
+          </article>
+
+          <article class="product-card" data-style="rústico">
+            <img class="product-image" src="images/m2.jpg" alt="Mesa rústica de comedor"/>
+            <div class="product-info">
+              <span class="product-category">Rústico</span>
+              <h3 class="product-name">Mesa Provence</h3>
+              <p class="product-price">Bs 899</p>
+              <button class="add-to-cart">Añadir al Carrito</button>
+            </div>
+          </article>
+
+          <article class="product-card" data-style="industrial">
+            <img class="product-image" src="images/m3.jpg" alt="Estantería industrial"/>
+            <div class="product-info">
+              <span class="product-category">Industrial</span>
+              <h3 class="product-name">Estantería Urban Loft</h3>
+              <p class="product-price">Bs 749</p>
+              <button class="add-to-cart">Añadir al Carrito</button>
+            </div>
+          </article>
+
+          <article class="product-card" data-style="nórdico">
+            <img class="product-image" src="images/m4.jpg" alt="Silla nórdica"/>
+            <div class="product-info">
+              <span class="product-category">Nórdico</span>
+              <h3 class="product-name">Silla Hygge</h3>
+              <p class="product-price">Bs 349</p>
+              <button class="add-to-cart">Añadir al Carrito</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Galería de Inspiración -->
+    <section id="galeria" class="section container">
+      <h2 class="section-title">Galería de Inspiración</h2>
+      <div class="gallery-grid">
+        <div class="gallery-item"><img src="images/m5.jpg" alt="Inspiración 1"/></div>
+        <div class="gallery-item"><img src="images/m6.jpg" alt="Inspiración 2"/></div>
+        <div class="gallery-item"><img src="images/m7.jpg" alt="Inspiración 3"/></div>
+        <div class="gallery-item"><img src="images/m8.jpg" alt="Inspiración 4"/></div>
+        <div class="gallery-item"><img src="images/m9.jpg" alt="Inspiración 5"/></div>
+        <div class="gallery-item"><img src="images/m10.jpg" alt="Inspiración 6"/></div>
+        <div class="gallery-item"><img src="images/m11.jpg" alt="Inspiración 7"/></div>
+        <div class="gallery-item"><img src="images/m12.jpg" alt="Inspiración 8"/></div>
+      </div>
+    </section>
+
+    <!-- Contacto -->
+    <section id="contacto" class="section section-alt">
+      <div class="container">
+        <h2 class="section-title">Contacto</h2>
+        <div class="contact-card">
+          <form class="contact-form" onsubmit="event.preventDefault(); notify('Mensaje enviado. ¡Gracias! 💌'); this.reset();">
+            <label>Nombre<input type="text" required></label>
+            <label>Email<input type="email" required></label>
+            <label>Mensaje<textarea rows="4" required></textarea></label>
+            <button class="cta-btn" type="submit">Enviar</button>
+          </form>
+          <div class="contact-info">
+            <p><strong>Tel:</strong> +00 123 456 789</p>
+            <p><strong>Email:</strong> hola@roxi.com</p>
+            <p><strong>Dirección:</strong> Av. Diseño 123</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <p>© <span id="year"></span> ROXI. Todos los derechos reservados.</p>
+      <a href="#inicio">Volver arriba ↑</a>
+    </div>
+  </footer>
+
+  <!-- Lightbox (mejorado) -->
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <button class="lightbox-close" aria-label="Cerrar">&times;</button>
+    <img id="lightboxImg" src="" alt="Vista ampliada">
+    <div class="lightbox-info">
+      <div class="lb-texts">
+        <h3 id="lbTitle">Título</h3>
+        <p id="lbMeta" class="lb-meta">—</p>
+      </div>
+      <button id="lbAdd" class="cta-btn">Añadir al Carrito</button>
+    </div>
+  </div>
+
+  <!-- Search Overlay -->
+  <div id="searchOverlay" class="search-overlay" aria-hidden="true">
+    <div class="search-box">
+      <input id="searchInput" type="text" placeholder="Buscar productos o estilos..." />
+      <button id="searchClose" class="search-close" aria-label="Cerrar">&times;</button>
+    </div>
+  </div>
+
+  <script src="animation.js"></script>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
