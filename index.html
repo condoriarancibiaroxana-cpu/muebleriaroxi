@@ -183,11 +183,11 @@
       <div class="container">
         <h2 class="section-title">Contacto</h2>
         <div class="contact-card">
-          <form class="contact-form" onsubmit="event.preventDefault(); notify('Mensaje enviado. ¡Gracias! 💌'); this.reset();">
-            <label>Nombre<input type="text" required></label>
-            <label>Email<input type="email" required></label>
-            <label>Mensaje<textarea rows="4" required></textarea></label>
-            <button class="cta-btn" type="submit">Enviar</button>
+          <form class="contact-form" action="https://formspree.io/f/xyzbqvpq" method="POST">
+              <label>Nombre<input type="text" name="nombre" required></label>
+              <label>Email<input type="email" name="_replyto" required></label>
+              <label>Mensaje<textarea rows="4" name="mensaje" required></textarea></label>
+              <button class="cta-btn" type="submit">Enviar</button>
           </form>
           <div class="contact-info">
             <p><strong>Tel:</strong> +00 123 456 789</p>
